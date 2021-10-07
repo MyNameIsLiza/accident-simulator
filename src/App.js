@@ -1,5 +1,5 @@
-import logo from './logo.svg';
 import './App.css';
+import Game from './Game'
 import firebase from 'firebase';
 const firebaseConfig = {
   apiKey: "AIzaSyCEyYh-BEkWFbkqWZUrrN-cJbrqsoSh75c",
@@ -17,25 +17,12 @@ if (!firebase.apps.length) {
 
 firebase.database().ref('/country').on('value', (elem) => {
   console.log(elem.val());
-});/**/
+});
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Game/>
     </div>
   );
 }
