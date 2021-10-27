@@ -1,4 +1,4 @@
-//import './Game.css';
+import React from 'react';
 import firebase from 'firebase';
 import {useEffect, useState, useCallback} from "react";
 import Button from '@mui/material/Button';
@@ -10,7 +10,7 @@ import {
     Link
 } from "react-router-dom";
 
-import getDataById from './db';
+import {getDataById} from './db';
 
 function Game() {
     let [situations, setSituations] = useState([]);
@@ -40,14 +40,14 @@ function Game() {
     return (
         <div className="Game">
             {!situation ? <ButtonGroup variant="outlined" aria-label="outlined button group">{
-                Object.keys(situations).map((key) => {
-                return (
-                    <Button onClick={startSituation} key={key}
-                            data-id={situations[key].id}>{situations[key].name}</Button>
-                );
-            }) }</ButtonGroup>
+                    Object.keys(situations).map((key) => {
+                        return (
+                            <Button onClick={startSituation} key={key}
+                                    data-id={situations[key].id}>{situations[key].name}</Button>
+                        );
+                    })}</ButtonGroup>
                 : <Situation {...situation} allEffects={situation.effects} effects={effects} success={success}
-                            handleEffects={handleEffects} handleSuccess={handleSuccess}/>
+                             handleEffects={handleEffects} handleSuccess={handleSuccess}/>
             }
         </div>
     );
@@ -80,16 +80,19 @@ function Situation(props) {
 
     }, [props.success, props.effects, handleEffects, handleSuccess]);
     return (
-        <div className="Situation" data-id={props.id}>
+        <div className="Situation card box-shadow w-50 mx-auto p-2" data-id={props.id}>
             <h2>{props.name}</h2>
             <h3>{question?.title}</h3>
             {
                 question?.answers ?
 
                     Object.keys(question.answers).map((key) => {
-                        return (
-                            <Button variant="outlined" key={key} data-id={question.answers[key].id}
-                                    onClick={answerClick}>{question.answers[key].title}</Button>
+                        return (<>{question.answers[key].title ?
+                                <Button className="w-50 mx-auto mb-2" variant="outlined" key={key}
+                                        data-id={question.answers[key].id}
+                                        onClick={answerClick}>{question.answers[key].title}</Button>
+                                : ''}
+                            </>
                         )
                     })
                     : <div className="result">

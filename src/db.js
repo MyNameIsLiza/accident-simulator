@@ -1,12 +1,12 @@
 import firebase from "firebase";
 
-export default function getDataById(id = '') {
+export function getDataById(id = '') {
     let keys = id?.substr(1, id.length - 1).split('_');
     let result;
     firebase.database().ref().on('value', (elem) => {
         result = elem.val();
     });
-    console.log(keys);
+    //console.log(keys);
     switch (keys.length) {
         case 1:
             return result[keys[0]];
@@ -17,5 +17,7 @@ export default function getDataById(id = '') {
         default:
             return result;
     }
-
+}
+export function sendSituations(situations) {
+    firebase.database().ref().set(situations);
 }

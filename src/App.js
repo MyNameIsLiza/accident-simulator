@@ -1,3 +1,4 @@
+import React from 'react';
 import './App.css';
 import Game from './Game'
 import firebase from 'firebase';
@@ -10,6 +11,7 @@ import {
 import AdminPanel from "./AdminPanel";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
+import Help from "./Help";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCEyYh-BEkWFbkqWZUrrN-cJbrqsoSh75c",
@@ -36,12 +38,14 @@ function App() {
                 <ButtonGroup>
                     <Button><Link to='/game'>Почати</Link></Button>
                     <Button><Link to='/admin_panel'>Адміністрування</Link></Button>
+                    <Button><Link to='/help'>Help</Link></Button>
                 </ButtonGroup>
                 <Switch>
                     <Route path='/game'>
                         <h2>Ситуації</h2>
                         <Game/></Route>
                     <Route path='/admin_panel'><h2>Адміністрування</h2><AdminPanel/></Route>
+                    <Route path='/help'><Help/></Route>
                 </Switch>
             </Router>
 

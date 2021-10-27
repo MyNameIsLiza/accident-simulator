@@ -1,0 +1,124 @@
+* {
+    border-radius: 0 !important;
+    font-family: 'BeVietnam', Arial, Helvetica, sans-serif;
+}
+
+@font-face {
+    font-family: 'BeVietnam';
+    src: url('../webfonts/be-vietnam.ttf');
+}
+
+@font-face {
+    font-family: 'Signika';
+    src: url('../webfonts/signika.ttf');
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Signika', Arial, Helvetica, sans-serif;
+}
+
+.section {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    align-items: center;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row {
+    width: 100%;
+}
+
+.bg-lime {
+    background-color: #b5d098;
+}
+
+.bg-light-brown {
+    background-color: #d2c2ab;
+}
+
+.form-control:focus, .btn:focus, .form-check-input:focus, .page-link:focus, label {
+    box-shadow: none !important;
+}
+
+.form-control:focus {
+    border: 1px solid rgb(172, 172, 172);
+}
+
+.text-justify {
+    text-align: justify !important;
+}
+
+.box-shadow {
+    -webkit-box-shadow: 0 2px 3px 1px rgb(0,0,0.3);
+    -moz-box-shadow: 0 2px 3px 1px rgba(0,0,0,.3);
+    box-shadow: 0 2px 3px 1px rgba(0,0,0,.3);
+}
+
+.btn.btn-white {
+    background-color: #fff;
+    color: rgb(73, 73, 73);
+}
+
+.btn.btn-white:hover {
+    background-color: rgb(245, 245, 245);
+    color: rgb(73, 73, 73);
+}
+
+.card-height {
+    max-height: 172px;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.px-list-group {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+.card.card-new {
+    cursor: pointer;
+    height: 339px;
+    border: 2px dashed #78945b;
+    background-color: rgba(159, 194, 131, 0.5);
+    transition: .2s;
+    text-decoration: none;
+}
+
+.card.card-new:hover {
+    border: 2px dashed #78945b;
+    background-color: rgba(153, 204, 108, 0.5);
+    transition: .2s;
+}
+
+.card.card-new > h1 {
+    line-height: .9;
+    color: #78945b;
+}
+
+.card.card-system {
+    height: 339px;
+}
+
+@media screen and (max-width: 322px) {
+    .card.card-system {
+        height: auto;
+    }
+}
+
+.form-check-input {
+    border-radius: 50% !important;
+}
+
+small {
+    font-size: 0.75em;
+}
