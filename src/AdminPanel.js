@@ -1,8 +1,7 @@
 import React from 'react';
 import firebase from 'firebase';
-import {useEffect, useState, useCallback} from "react";
+import {useEffect, useCallback} from "react";
 import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import create from 'zustand'
 import './css/bootstrap.min.css'
 import './css/style.css'
@@ -63,10 +62,10 @@ function AdminPanel() {
     const handleValue = useStore(state => state.handleValue);
 
     useEffect(async () => {
+        handleValue('admin_panel');
         const promise = await firebase.database().ref().on('value', (elem) => {
             handleSituations(elem.val());
             console.log(elem.val());
-
         });
         const situationId = '#';
         const a = {'id': `_${situationId}_0_0`};
@@ -97,10 +96,18 @@ function Situation() {
     let situation = useStore(state => state.situation);
     let value = useStore(state => state.value);
     let question = useStore(state => state.question);
+    let answer = useStore(state => state.answer);
     const handleSituations = useStore(state => state.handleSituations);
     const handleSituation = useStore(state => state.handleSituation);
     const handleQuestion = useStore(state => state.handleQuestion);
+    const handleAnswer = useStore(state => state.handleAnswer);
     const handleValue = useStore(state => state.handleValue);
+
+    useEffect(() => {
+
+
+    }, [])
+
     const handleClick = useCallback(({target}) => {
         const situation_title = document.getElementById('situation_title');
         const question_title = document.getElementById('question_title');
@@ -116,19 +123,16 @@ function Situation() {
         handleSituation(s);
         question_title.value = '';
         handleQuestion({
-            'id': `${situation.id}_${+question.id.split('_')[2] + 1}`,
+            'id': `_#_${+question.id.split('_')[2] + 1}`,
             'answers': []
         });
 
     }, [question, situation, situations]);
 
     const handleSend = useCallback(() => {
-        console.log('ss', situations);
-        console.log('ss #', situations['#']);
         const newId = +situations[situations.length - 1].id.split('_')[1] + 1;
         situations[newId] = JSON.parse(JSON.stringify(situations['#']).replaceAll('#', newId ?? 0));
         delete situations['#'];
-        console.log(situations);
         sendSituations(situations);
         handleValue('admin_panel');
     }, []);
@@ -222,23 +226,28 @@ function Question() {
 
     const handleClick = useCallback(({target}) => {
         const answer_title = document.getElementById('answer_title');
+        const answer_toQuestion = document.getElementById('answer_toQuestion');
         const s = {...situation};
         const q = {...question};
         const a = {...answer};
-        if (answer.title !== answer_title.value) {
-            a.title = answer_title.value;
-        }
+        a.title = answer_title.value;
+        a.toQuestion = answer_toQuestion.value;
         handleAnswer(a);
         handleQuestion(q);
         handleSituation(s);
         answer_title.value = '';
+        answer_toQuestion.value = '';
         console.log('id', question.answers.length);
         handleAnswer({
-            'id': `${situation.id}_${+question.id.split('_')[2]}_${question.answers.length}`
+            'id': `_#_${+question.id.split('_')[2]}_${question.answers.length}`
         });
     }, [answer, question, situation, situations]);
 
     const handleSend = useCallback(() => {
+        handleQuestion({
+            'id': `_#_${situation.questions.length}`,
+            'answers': []
+        });
         handleValue('situation');
     }, []);
 
@@ -256,9 +265,16 @@ function Question() {
                                 <small className="text-danger">Error</small>
                             </div>
                             <div className="form-group px-0 mb-4">
-                                <label>Answer</label>
+                                <label htmlFor="answer_title">Answer</label>
                                 <input id="answer_title" required className="form-control" type="text"/>
+                                <label htmlFor="answer_toQuestion">To Question</label>
+                                <select id="answer_toQuestion" required className="form-control">
+                                    {situation.questions.map((el) => el.title ? (
+                                        <option value={el.id}>{el.title}</option>
+                                    ) : '')}
+                                </select>
                                 <small className="text-danger">Error</small>
+
                             </div>
                         </div>
                     </div>
@@ -283,6 +299,8 @@ function Question() {
                                 {question.answers ? question.answers.map((el) => el.title ? (
                                     <li className="list-group-item w-100 d-flex justify-content-between align-items-center overflow-auto">
                                         <span>{el.title}</span>
+                                        <span>To</span>
+                                        <span>{el.toQuestion}</span>
                                         <small className="text-primary">
                                             <button className="btn btn-link" /*onClick={removeQuestion}*/><i>Remove</i>
                                             </button>
