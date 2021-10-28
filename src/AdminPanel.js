@@ -133,6 +133,7 @@ function Situation() {
         const newId = +situations[situations.length - 1].id.split('_')[1] + 1;
         situations[newId] = JSON.parse(JSON.stringify(situations['#']).replaceAll('#', newId ?? 0));
         delete situations['#'];
+        console.log(situations);
         sendSituations(situations);
         handleValue('admin_panel');
     }, []);
@@ -244,10 +245,18 @@ function Question() {
     }, [answer, question, situation, situations]);
 
     const handleSend = useCallback(() => {
-        handleQuestion({
-            'id': `_#_${situation.questions.length}`,
-            'answers': []
-        });
+        console.log(situation.questions[situation.questions.length - 1]);
+        if (situation.questions[situation.questions.length - 1].title) {
+            console.log('IF');
+            handleQuestion({
+                'id': `_#_${situation.questions.length}`,
+                'answers': []
+            });
+        } else {
+            console.log('ELSE');
+            handleQuestion(situation.questions[situation.questions.length - 1]);
+        }
+
         handleValue('situation');
     }, []);
 
