@@ -3,12 +3,6 @@ import firebase from 'firebase';
 import {useEffect, useState, useCallback} from "react";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
 
 import {getDataById} from './db';
 

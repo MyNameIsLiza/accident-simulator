@@ -6,7 +6,6 @@ export function getDataById(id = '') {
     firebase.database().ref().on('value', (elem) => {
         result = elem.val();
     });
-    //console.log(keys);
     switch (keys.length) {
         case 1:
             return result[keys[0]];

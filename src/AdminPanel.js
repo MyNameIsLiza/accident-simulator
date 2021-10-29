@@ -41,16 +41,12 @@ const useStore = create(set => ({
             const q = {...state.question};
             q.answers[a.id.split('_')[3]] = a;
             state.handleQuestion(q);
-            console.log('q', q);
-            console.log('a', a);
             return {...state, question: q, answer: a}
         })
     }
 }))
 
 function AdminPanel() {
-    let situations = useStore(state => state.situations);
-    let situation = useStore(state => state.situation);
     let value = useStore(state => state.value);
     let question = useStore(state => state.question);
     let answer = useStore(state => state.answer);
@@ -61,11 +57,10 @@ function AdminPanel() {
     const handleAnswer = useStore(state => state.handleAnswer);
     const handleValue = useStore(state => state.handleValue);
 
-    useEffect(async () => {
+    const handleDataBaseStart = useCallback(async()=>{
         handleValue('admin_panel');
         const promise = await firebase.database().ref().on('value', (elem) => {
             handleSituations(elem.val());
-            console.log(elem.val());
         });
         const situationId = '#';
         const a = {'id': `_${situationId}_0_0`};
@@ -77,6 +72,10 @@ function AdminPanel() {
         handleAnswer(a);
         handleValue('situation');
         return promise;
+    },[answer, question, handleAnswer, handleQuestion, handleSituation, handleValue, handleSituations]);
+
+    useEffect(() => {
+        return handleDataBaseStart();
     }, []);
 
     return (<div className="AdminPanel">
@@ -94,21 +93,12 @@ function AdminPanel() {
 function Situation() {
     let situations = useStore(state => state.situations);
     let situation = useStore(state => state.situation);
-    let value = useStore(state => state.value);
     let question = useStore(state => state.question);
-    let answer = useStore(state => state.answer);
-    const handleSituations = useStore(state => state.handleSituations);
     const handleSituation = useStore(state => state.handleSituation);
     const handleQuestion = useStore(state => state.handleQuestion);
-    const handleAnswer = useStore(state => state.handleAnswer);
     const handleValue = useStore(state => state.handleValue);
 
-    useEffect(() => {
-
-
-    }, [])
-
-    const handleClick = useCallback(({target}) => {
+    const handleClick = useCallback(() => {
         const situation_title = document.getElementById('situation_title');
         const question_title = document.getElementById('question_title');
         const s = {...situation};
@@ -127,24 +117,20 @@ function Situation() {
             'answers': []
         });
 
-    }, [question, situation, situations]);
+    }, [question, situation, handleQuestion, handleSituation]);
 
     const handleSend = useCallback(() => {
         const newId = +situations[situations.length - 1].id.split('_')[1] + 1;
         situations[newId] = JSON.parse(JSON.stringify(situations['#']).replaceAll('#', newId ?? 0));
         delete situations['#'];
-        console.log(situations);
         sendSituations(situations);
         handleValue('admin_panel');
-    }, []);
+    }, [situations, handleValue]);
 
     const editQuestion = useCallback(({target}) => {
         handleValue('question');
         handleQuestion(situation.questions[target.closest('li').dataset['id'].split('_')[2]]);
-    }, [])
-    useEffect(() => {
-
-    }, [])
+    }, [handleQuestion, handleValue, situation]);
 
     return (<div id="vueElement" className="row mx-0 px-0 justify-content-center">
             <div className="col-lg-4 px-0 my-2 my-lg-0">
@@ -213,13 +199,10 @@ function Situation() {
 }
 
 function Question() {
-    let situations = useStore(state => state.situations);
     let situation = useStore(state => state.situation);
-    let value = useStore(state => state.value);
     let question = useStore(state => state.question);
     let answer = useStore(state => state.answer);
 
-    const handleSituations = useStore(state => state.handleSituations);
     const handleSituation = useStore(state => state.handleSituation);
     const handleQuestion = useStore(state => state.handleQuestion);
     const handleAnswer = useStore(state => state.handleAnswer);
@@ -238,27 +221,23 @@ function Question() {
         handleSituation(s);
         answer_title.value = '';
         answer_toQuestion.value = '';
-        console.log('id', question.answers.length);
         handleAnswer({
             'id': `_#_${+question.id.split('_')[2]}_${question.answers.length}`
         });
-    }, [answer, question, situation, situations]);
+    }, [answer, question, situation, handleAnswer, handleQuestion, handleSituation]);
 
     const handleSend = useCallback(() => {
-        console.log(situation.questions[situation.questions.length - 1]);
         if (situation.questions[situation.questions.length - 1].title) {
-            console.log('IF');
             handleQuestion({
                 'id': `_#_${situation.questions.length}`,
                 'answers': []
             });
         } else {
-            console.log('ELSE');
             handleQuestion(situation.questions[situation.questions.length - 1]);
         }
 
         handleValue('situation');
-    }, []);
+    }, [handleQuestion, handleValue, situation]);
 
     return (<div id="vueElement" className="row mx-0 px-0 justify-content-center">
             <div className="col-lg-4 px-0 my-2 my-lg-0">
