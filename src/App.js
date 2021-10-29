@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './css/App.css';
 import Game from './Game'
 import firebase from 'firebase';
 import {
@@ -26,10 +26,6 @@ const firebaseConfig = {
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
 }
-
-firebase.database().ref('/country').on('value', (elem) => {
-    console.log(elem.val());
-});
 
 function App() {
     return (

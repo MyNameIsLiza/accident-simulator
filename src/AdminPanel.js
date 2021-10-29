@@ -41,8 +41,6 @@ const useStore = create(set => ({
             const q = {...state.question};
             q.answers[a.id.split('_')[3]] = a;
             state.handleQuestion(q);
-            console.log('q', q);
-            console.log('a', a);
             return {...state, question: q, answer: a}
         })
     }
@@ -65,7 +63,6 @@ function AdminPanel() {
         handleValue('admin_panel');
         const promise = await firebase.database().ref().on('value', (elem) => {
             handleSituations(elem.val());
-            console.log(elem.val());
         });
         const situationId = '#';
         const a = {'id': `_${situationId}_0_0`};
@@ -133,7 +130,6 @@ function Situation() {
         const newId = +situations[situations.length - 1].id.split('_')[1] + 1;
         situations[newId] = JSON.parse(JSON.stringify(situations['#']).replaceAll('#', newId ?? 0));
         delete situations['#'];
-        console.log(situations);
         sendSituations(situations);
         handleValue('admin_panel');
     }, []);
@@ -141,10 +137,7 @@ function Situation() {
     const editQuestion = useCallback(({target}) => {
         handleValue('question');
         handleQuestion(situation.questions[target.closest('li').dataset['id'].split('_')[2]]);
-    }, [])
-    useEffect(() => {
-
-    }, [])
+    }, []);
 
     return (<div id="vueElement" className="row mx-0 px-0 justify-content-center">
             <div className="col-lg-4 px-0 my-2 my-lg-0">
@@ -238,22 +231,18 @@ function Question() {
         handleSituation(s);
         answer_title.value = '';
         answer_toQuestion.value = '';
-        console.log('id', question.answers.length);
         handleAnswer({
             'id': `_#_${+question.id.split('_')[2]}_${question.answers.length}`
         });
     }, [answer, question, situation, situations]);
 
     const handleSend = useCallback(() => {
-        console.log(situation.questions[situation.questions.length - 1]);
         if (situation.questions[situation.questions.length - 1].title) {
-            console.log('IF');
             handleQuestion({
                 'id': `_#_${situation.questions.length}`,
                 'answers': []
             });
         } else {
-            console.log('ELSE');
             handleQuestion(situation.questions[situation.questions.length - 1]);
         }
 
